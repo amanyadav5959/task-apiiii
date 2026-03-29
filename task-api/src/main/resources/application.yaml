@@ -1,0 +1,59 @@
+# --- Application ---
+spring:
+  application:
+    name: task-api
+
+  # --- MySQL (required: JPA + mysql-connector-j) ---
+  # File: src/main/resources/application.yaml
+  # Password must match MySQL user (e.g. root). If the password is only digits like 0000,
+  # you MUST quote it — otherwise YAML treats 0000 as the number 0 and login fails.
+  # Safer: use env SPRING_DATASOURCE_PASSWORD in IntelliJ Run Configuration (no password in file).
+  datasource:
+    url: jdbc:mysql://localhost:3306/task_api?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=utf8
+    username: root
+    password: '0000'
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # --- JPA / Hibernate ---
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  # --- Redis (optional: only used if Redis is running; see profile "no-redis" below) ---
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      # password:   # uncomment if your Redis requires AUTH
+
+# --- JWT (used by JwtService; not Spring standard keys) ---
+# Production: set env JWT_SECRET to a long random string (never commit real secrets).
+app:
+  jwt:
+    secret: ${JWT_SECRET:dev-only-CHANGE-ME-min-32-chars-for-hs256-xx}
+    expiration-ms: 86400000
+
+# Swagger UI + OpenAPI JSON (springdoc)
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+
+---
+# Profile: run without Redis (IntelliJ VM options: -Dspring.profiles.active=no-redis)
+# Or: set env SPRING_PROFILES_ACTIVE=no-redis
+spring:
+  config:
+    activate:
+      on-profile: no-redis
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration

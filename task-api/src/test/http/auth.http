@@ -1,0 +1,69 @@
+### Register (password min 8 characters)
+### Use a valid email: domain after @ must be real, e.g. gmail.com — not "amanyadav@.com"
+POST http://localhost:8080/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "amanyadav@gmail.com",
+  "password": "password12"
+}
+
+### Login (same email + password as register)
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "amanyadav@gmail.com",
+  "password": "password12"
+}
+
+### Health (no auth)
+GET http://localhost:8080/api/v1/health
+
+### Swagger UI (browser): http://localhost:8080/swagger-ui.html
+### OpenAPI JSON (Postman import): http://localhost:8080/v3/api-docs
+
+### --- Tasks (JWT) ---
+### Set @token to accessToken only (no extra word "token" at the end — copy ends with ...chars like AI8 not AI8token)
+### Use: Authorization: Bearer {{token}}   OR raw JWT: Authorization: {{token}}
+### WRONG: {{eyJ...}} around the whole JWT — {{ }} is only for variable NAMES like {{token}}
+
+@token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbWFueWFkYXZAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NzQ3Mjg2MzEsImV4cCI6MTc3NDgxNTAzMX0.1oYWiR_P4X0tVIVOlCW179RIHojdWsLuaSF1u3wHZOI
+
+### List tasks (USER: own tasks only; ADMIN: all tasks)
+GET http://localhost:8080/api/v1/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbWFueWFkYXZAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NzQ3Mjg2MzEsImV4cCI6MTc3NDgxNTAzMX0.1oYWiR_P4X0tVIVOlCW179RIHojdWsLuaSF1u3wHZOI
+
+### Create task (optional status: TODO | IN_PROGRESS | DONE; omit for TODO)
+POST http://localhost:8080/api/v1/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbWFueWFkYXZAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NzQ3Mjg2MzEsImV4cCI6MTc3NDgxNTAzMX0.1oYWiR_P4X0tVIVOlCW179RIHojdWsLuaSF1u3wHZOI
+Content-Type: application/json
+
+{
+  "title": "My first task",
+  "description": "Optional description",
+  "status": "TODO"
+}
+
+### Get task by id (use id from create/list response, e.g. 1)
+GET http://localhost:8080/api/v1/tasks/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbWFueWFkYXZAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NzQ3Mjg2MzEsImV4cCI6MTc3NDgxNTAzMX0.1oYWiR_P4X0tVIVOlCW179RIHojdWsLuaSF1u3wHZOI
+
+### Update task (same id; status must be TODO | IN_PROGRESS | DONE)
+PUT http://localhost:8080/api/v1/tasks/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbWFueWFkYXZAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NzQ3Mjg2MzEsImV4cCI6MTc3NDgxNTAzMX0.1oYWiR_P4X0tVIVOlCW179RIHojdWsLuaSF1u3wHZOI
+Content-Type: application/json
+
+{
+  "title": "Updated title",
+  "description": "Updated description",
+  "status": "IN_PROGRESS"
+}
+
+GET http://localhost:8080/api/v1/tasks/1
+Authorization : Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbWFueWFkYXZAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NzQ3Mjg2MzEsImV4cCI6MTc3NDgxNTAzMX0.1oYWiR_P4X0tVIVOlCW179RIHojdWsLuaSF1u3wHZOI
+
+
+### Delete task (204 No Content if ok)
+DELETE http://localhost:8080/api/v1/tasks/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbWFueWFkYXZAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NzQ3Mjg2MzEsImV4cCI6MTc3NDgxNTAzMX0.1oYWiR_P4X0tVIVOlCW179RIHojdWsLuaSF1u3wHZOI
